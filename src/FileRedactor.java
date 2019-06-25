@@ -30,7 +30,7 @@ public class FileRedactor  {
         String fileContentHead = "";
         String fileContent = "";
         String LS = System.getProperty("line.separator");
-        String clear = "(                               )"; //Длинна строки
+        String clear = "(                               )"; //Задається довжина рядку
         char[] chars = new char[1];
         String newLine = "";
         String oldLine = "";
@@ -51,32 +51,32 @@ public class FileRedactor  {
 
         count = 1;
 
-        //Запись шапки
+        //Запис шапки
         bWriter.write(fileContentHead + LS);
 
         //Создание заглавия
         while ((line = bReader.readLine()) != null) {
 
-            //Поиск названия операции
+            //Пошук назви операції
             if(line.startsWith("(#")) {
                 chars = clear.toCharArray();    //Clear array
                 line.getChars(2, line.length(), chars, chars.length-line.length()+2);
             }
 
-            //Поиск номера и названия инструмента
+            //Пошук номеру та назви інструменту
             if(line.startsWith("N") || line.startsWith("M30")){
                 if (line.startsWith("N")) {
                     String tool = line.substring(line.indexOf("T")+1, line.indexOf("T")+5);
                     String oldTool = tool;
 
-                    tool = toolErrorMessage(tool);                          //Если номер неверен исправть, если нужно
+                    tool = toolErrorMessage(tool);                          //Якщо номер інструменту помилковий - виправити (за потребою)
 
-                    if(!oldTool.equals(tool)){                              // Если номер инструмента был исправлен - заменить новым
+                    if(!oldTool.equals(tool)){                              //Якщо номер інструменту був виправлений - замінити новим
                         line = line.replace(oldTool, tool);
                     }
 
-                    tool.getChars(0, 4, chars, 1);                                  //Добавление № инструмента в массив
-                    line.getChars(line.indexOf("T")+7, line.length()-1, chars, 6);  //Добавление имени инструмента в массив
+                    tool.getChars(0, 4, chars, 1);                                  //Додання № инструменту в масив
+                    line.getChars(line.indexOf("T")+7, line.length()-1, chars, 6);  //Додання імені инструменту в масив
 
                     newLine = String.valueOf(chars);
                 }
@@ -93,8 +93,8 @@ public class FileRedactor  {
                     }
 
                     if(!oldLine.isEmpty()){
-                        System.out.println(oldLine);               //Запись строчки в консоль
-                        bWriter.write(oldLine + LS);            //Запись строчки в файл
+                        System.out.println(oldLine);               //Запис готового рядку в консоль
+                        bWriter.write(oldLine + LS);            //Запис готового рядку в файл
                     }
 
                     oldLine = newLine;
